@@ -1,19 +1,20 @@
 from rest_framework import serializers
 
 from .models import Course, Enrollment
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, StudentSerializer, TeacherSerializer
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    
+    teacher = TeacherSerializer()
+    students = StudentSerializer(many=True)
     class Meta:
         model = Course
-        fields = "__all__"
+        fields = ('course_name', 'course_description', 'teacher', 'students')
         
 
 class EnrollmentSerializer(serializers.ModelSerializer):
     course = CourseSerializer(many=True)
-    student = UserSerializer(many=True)
+    student = StudentSerializer(many=True)
 
 
     class Meta:

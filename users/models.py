@@ -12,3 +12,11 @@ class User(auth.models.AbstractUser):
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
+
+
+class Student(models.Model):
+    user = models.ForeignKey(User, related_name="student", on_delete=models.CASCADE)
+
+class Teacher(models.Model):
+    user = models.ForeignKey(User, related_name="teacher", on_delete=models.CASCADE)
+    

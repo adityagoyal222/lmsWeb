@@ -5,8 +5,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework import generics
+from rest_framework.views import APIView
 
-from .models import User
+from .models import Student, Teacher, User
 from .serializers import UserSerializer
 
 
@@ -23,6 +24,12 @@ def create_auth(request):
             user_type = request.data.get('user_type'),
         )
         user.set_password(request.data.get('password'))
+        if user.user_type == "1":
+            student = Student.objects.create(user=user)
+            student.save()
+        elif user.user_type == "2":
+            teacher = Teacher.objects.create(user=user)
+            teacher.save()
         user.save()
         return Response(serialized.data, status=status.HTTP_201_CREATED)
     else:
@@ -42,6 +49,13 @@ def login(request):
 
     token, _ = Token.objects.get_or_create(user=user)
     return Response({"token": token.key})
+
+
+class LogoutView(APIView):
+    def get(self, request, format=None):
+        # simply delete the token to force a login
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
 
 class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()
