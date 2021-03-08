@@ -2,12 +2,13 @@ from django.conf.urls import include, url
 from rest_framework import urlpatterns
 from rest_framework.routers import SimpleRouter
 
-from courses.views import CourseViewSet
+from courses.views import CourseViewSet, EnrollmentViewSet
 from users.views import create_auth, login, UserList
 
 app_name = "api"
 router = SimpleRouter()
 router.register(r"courses", CourseViewSet)
+router.register(r"enroll", EnrollmentViewSet)
 
 urlpatterns = [
     url('', include(router.urls)),
