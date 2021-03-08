@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'bootstrap',
     'rest_framework',
+    'rest_framework.authtoken',
 
     'assignments',
     'attendance',
