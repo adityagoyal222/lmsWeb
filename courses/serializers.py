@@ -1,12 +1,11 @@
 from rest_framework import serializers
 
 from .models import Course, Enrollment
-from users.serializers import UserSerializer, StudentSerializer, TeacherSerializer
-
+from users.serializers import UserSerializer
 
 class CourseSerializer(serializers.ModelSerializer):
-    teacher = TeacherSerializer()
-    students = StudentSerializer(many=True)
+    teacher = UserSerializer()
+    students = UserSerializer(many=True)
     class Meta:
         model = Course
         fields = ('course_name', 'course_description', 'teacher', 'students')
@@ -14,7 +13,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
 class EnrollmentSerializer(serializers.ModelSerializer):
     course = CourseSerializer(many=True)
-    student = StudentSerializer(many=True)
+    student = UserSerializer(many=True)
 
 
     class Meta:
