@@ -18,3 +18,14 @@ class AssignmentViewSet(ModelViewSet):
             permission_classes = [TeacherPermission]
 
         return [permission() for permission in permission_classes]
+
+class SubmitAssignmentViewSet(ModelViewSet):
+    serializer_class = SubmitAssignmentSerializer
+    queryset = SubmitAssignment.objects.all()
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [TeacherPermission, StudentPermission]
+        return [permission() for permission in permission_classes]
