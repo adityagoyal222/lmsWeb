@@ -8,11 +8,13 @@ from rest_framework_simplejwt.views import (
 
 from courses.views import CourseViewSet, EnrollmentViewSet
 from users.views import create_auth, UserList, profile
+from resources.views import ResourceViewSet
 
 app_name = "api"
 router = SimpleRouter()
 router.register(r"courses", CourseViewSet)
 router.register(r"enroll", EnrollmentViewSet)
+router.register(r"resources", ResourceViewSet)
 
 urlpatterns = [
     url('', include(router.urls)),

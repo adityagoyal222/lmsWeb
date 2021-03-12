@@ -19,3 +19,5 @@ class ResourceViewSet(ModelViewSet):
             permission_classes = [TeacherPermission]
         return [permission() for permission in permission_classes]
 
+    def pre_save(self, obj):
+        obj.resource_file = self.request.FILES.get('file')
