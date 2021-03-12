@@ -16,3 +16,27 @@ class Assignment(models.Model):
 
     def __str__(self):
         return self.assignment_name
+
+class SubmitAssignment(models.Model):
+    author = models.ForeignKey(User, related_name='assignment', on_delete=models.CASCADE)
+    topic = models.CharField(max_length=200, blank=False)
+    submission_text = models.TextField(blank=False)
+    submission_file = models.FileField(blank=False)
+    submitted_date = models.DateTimeField(default=timezone.now)
+    assignment_ques = models.ForeignKey(Assignment, related_name="question", on_delete=models.CASCADE)
+    graded = models.BooleanField(default=False)
+    grade = models.IntegerField(
+        default=0,
+        validators=[
+            MaxValueValidator(100),
+            MinValueValidator(0)
+        ]
+    )
+
+    def __str__(self):
+        return self.topic
+
+    def grade_assignment(self, grade):
+        self.grade = grade
+        self.graded = True
+        self.save()
