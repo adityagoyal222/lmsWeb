@@ -6,6 +6,7 @@ import requests
 
 
 class StudentPermission(permissions.BasePermission):
+    
     def has_permission(self, request, view):
         return request.user.user_type == 1
 

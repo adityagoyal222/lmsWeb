@@ -27,5 +27,7 @@ class SubmitAssignmentViewSet(ModelViewSet):
         if self.request.method == "GET":
             permission_classes = [AllowAny]
         else:
-            permission_classes = [TeacherPermission, StudentPermission]
+            print(TeacherPermission)
+            print(StudentPermission)
+            permission_classes = [StudentPermission | TeacherPermission]
         return [permission() for permission in permission_classes]
