@@ -14,7 +14,7 @@ class ResourceViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            permission_classes = [StudentPermission, TeacherPermission]
+            permission_classes = [AllowAny]
         else:
             permission_classes = [TeacherPermission]
         return [permission() for permission in permission_classes]
