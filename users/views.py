@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from django.views.decorators.csrf import ensure_csrf_cookie
+from rest_framework.permissions import AllowAny
+from rest_framework import exceptions
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -9,6 +12,7 @@ from rest_framework.views import APIView
 
 from .models import User
 from .serializers import UserSerializer
+
 
 
 # Create your views here.
@@ -29,28 +33,41 @@ def create_auth(request):
     else:
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(["POST"])
-# def login(request):
-#     username = request.data.get("username")
-#     password = request.data.get("password")
+@api_view(['GET'])
+def profile(request):
+    user = request.user
+    serialized_user = UserSerializer(user).data
+    return Response({'user': serialized_user})
 
-#     print(username)
-#     print(password)
-#     user = authenticate(username=username, password=password)
-#     print(User.objects.get(username=username).password)
-#     print(request.user)
-#     if not user:
-#         return Response({"error": "Login failed"}, status=status.HTTP_401_UNAUTHORIZED)
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# @ensure_csrf_cookie
+# def login_view(request):
+#     username = request.data.get('username')
+#     password = request.data.get('password')
+#     response = Response()
+#     if(username is None) or (password is None):
+#         raise exceptions.AuthenticationFailed('username and password required')
 
-#     token, _ = Token.objects.get_or_create(user=user)
-#     return Response({"token": token.key})
+#     user = User.objects.filter(username=username).first()
+#     if(user is None):
+#         raise exceptions.AuthenticationFailed('user not found')
+#     if (not user.check_password(password)):
+#         raise exceptions.AuthenticationFailed('wrong password')
 
+#     serialized_user = UserSerializer(user).data
 
-# class LogoutView(APIView):
-#     def get(self, request, format=None):
-#         # simply delete the token to force a login
-#         request.user.auth_token.delete()
-#         return Response(status=status.HTTP_200_OK)
+#     access_token = generate_access_token(user)
+#     refresh_token = generate_refresh_token(user)
+
+#     response.set_cookie(key='refreshtoken', value=refresh_token, httponly=True)
+#     response.data = {
+#         'access_token': access_token,
+#         'user': serialized_user,
+#     }
+
+#     return response
+
 
 class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()

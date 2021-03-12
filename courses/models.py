@@ -8,7 +8,6 @@ class Course(models.Model):
     course_name = models.CharField(max_length=200)
     course_description = models.TextField()
     teacher = models.ForeignKey(User, related_name="course", on_delete=models.CASCADE)
-    students = models.ManyToManyField(User, through="Enrollment", related_name="student_course")
 
     def __str__(self):
         return self.course_name
@@ -18,7 +17,7 @@ class Course(models.Model):
 
 
 class Enrollment(models.Model):
-    course = models.ForeignKey(Course, related_name="enrollments", on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, related_name="enrollments", on_delete=models.CASCADE, null=True, blank=True)
     student = models.ForeignKey(User, related_name="user_courses", on_delete=models.CASCADE)
 
     class Meta:

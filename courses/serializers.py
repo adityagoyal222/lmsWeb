@@ -4,18 +4,18 @@ from .models import Course, Enrollment
 from users.serializers import UserSerializer
 
 class CourseSerializer(serializers.ModelSerializer):
-    teacher = UserSerializer()
-    students = UserSerializer(many=True)
+    teacher = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Course
-        fields = ('course_name', 'course_description', 'teacher', 'students')
+        fields = ('id', 'course_name', 'course_description', 'teacher')
+    
         
 
 class EnrollmentSerializer(serializers.ModelSerializer):
-    course = CourseSerializer(many=True)
-    student = UserSerializer(many=True)
+    student = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
 
     class Meta:
         model = Enrollment
-        fields = ('course', 'student')
+        fields = ('id', 'course', 'student')
